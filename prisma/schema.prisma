@@ -1,0 +1,70 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client"
+  output   = "./generated/client"
+}
+
+datasource db {
+  provider  = "postgresql"
+}
+
+// Modelo de Usuario (Docentes/Administradores)
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  role      Role     @default(TEACHER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  courses   Course[]
+}
+
+enum Role {
+  ADMIN
+  TEACHER
+}
+
+// Modelo de Curso (Grado/Sección)
+model Course {
+  id          String       @id @default(cuid())
+  name        String       // Ejemplo: "5to Grado A"
+  teacherId   String
+  teacher     User         @relation(fields: [teacherId], references: [id])
+  students    Student[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+// Modelo de Estudiante
+model Student {
+  id            String       @id @default(cuid())
+  firstName     String
+  lastName      String
+  parentEmail   String       // Email para notificaciones
+  parentPhone   String?      // Teléfono del padre/madre
+  courseId      String
+  course        Course       @relation(fields: [courseId], references: [id])
+  attendances   Attendance[]
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+}
+
+// Modelo de Asistencia
+model Attendance {
+  id        String           @id @default(cuid())
+  date      DateTime         @default(now())
+  status    AttendanceStatus
+  studentId String
+  student   Student          @relation(fields: [studentId], references: [id])
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+
+  @@unique([date, studentId]) // Evita duplicar asistencia el mismo día
+}
+
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+  LATE
+}
