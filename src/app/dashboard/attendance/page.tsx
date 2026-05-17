@@ -39,6 +39,7 @@ export default function AttendancePage() {
   const [saveState, setSaveState] = useState<SaveState>('idle');
   const [searchTerm, setSearchTerm] = useState('');
   const [emailsSent, setEmailsSent] = useState<number | null>(null);
+  const [emailErrors, setEmailErrors] = useState<string[]>([]);
 
   useEffect(() => {
     async function fetchCourses() {
@@ -104,6 +105,7 @@ export default function AttendancePage() {
       if (data.success) {
         setSaveState('success');
         setEmailsSent(data.emailsSent ?? 0);
+        setEmailErrors(data.emailErrors ?? []);
       } else {
         setSaveState('error');
       }
@@ -135,9 +137,17 @@ export default function AttendancePage() {
             {selectedCourse?.name} — {new Date().toLocaleDateString('es-PE')}
           </p>
           {emailsSent !== null && (
-            <p className="text-sm text-sky-600 font-semibold mb-6">
+            <p className="text-sm text-sky-600 font-semibold mb-2">
               {emailsSent} correo{emailsSent !== 1 ? 's' : ''} enviado{emailsSent !== 1 ? 's' : ''} a padres de familia
             </p>
+          )}
+          {emailErrors.length > 0 && (
+            <div className="mb-6 bg-rose-50 border border-rose-200 rounded-xl p-3 text-left">
+              <p className="text-xs font-bold text-rose-600 mb-1">Error al enviar correos:</p>
+              {emailErrors.map((e, i) => (
+                <p key={i} className="text-xs text-rose-500">{e}</p>
+              ))}
+            </div>
           )}
           <div className="flex gap-3">
             <button

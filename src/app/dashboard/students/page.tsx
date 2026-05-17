@@ -337,7 +337,7 @@ export default function StudentsPage() {
           <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-lg overflow-hidden animate-in fade-in zoom-in-95 duration-200">
 
             {/* Header del modal */}
-            <div className="px-6 py-5 border-b border-slate-100 flex items-center justify-between" style={BANNER_STYLE}>
+            <div className="relative px-6 py-5 border-b border-slate-100 flex items-center justify-between" style={BANNER_STYLE}>
               <div className="absolute inset-0 opacity-10" style={{ backgroundImage: PATTERN_URL }} />
               <h3 className="relative font-bold text-white flex items-center gap-2">
                 <svg className="w-5 h-5 text-sky-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
